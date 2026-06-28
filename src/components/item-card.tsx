@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { ItineraryItem } from '@/types'
 import { Card, CardContent } from '@/components/ui/card'
@@ -18,10 +17,10 @@ import {
 
 interface Props {
   item: ItineraryItem
+  onSuccess: () => void
 }
 
-export function ItemCard({ item }: Props) {
-  const router = useRouter()
+export function ItemCard({ item, onSuccess }: Props) {
   const [open, setOpen] = useState(false)
   const [placeName, setPlaceName] = useState(item.place_name)
   const [time, setTime] = useState(item.time ?? '')
@@ -38,14 +37,14 @@ export function ItemCard({ item }: Props) {
       .eq('id', item.id)
     setOpen(false)
     setLoading(false)
-    router.refresh()
+    onSuccess()
   }
 
   async function handleDelete() {
     const supabase = createClient()
     await supabase.from('itinerary_items').delete().eq('id', item.id)
     setOpen(false)
-    router.refresh()
+    onSuccess()
   }
 
   return (

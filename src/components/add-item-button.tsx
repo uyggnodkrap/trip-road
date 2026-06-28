@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,10 +18,10 @@ import { cn } from '@/lib/utils'
 interface Props {
   tripId: string
   date: string
+  onSuccess: () => void
 }
 
-export function AddItemButton({ tripId, date }: Props) {
-  const router = useRouter()
+export function AddItemButton({ tripId, date, onSuccess }: Props) {
   const [open, setOpen] = useState(false)
   const [placeName, setPlaceName] = useState('')
   const [time, setTime] = useState('')
@@ -59,7 +58,7 @@ export function AddItemButton({ tripId, date }: Props) {
     setMemo('')
     setOpen(false)
     setLoading(false)
-    router.refresh()
+    onSuccess()
   }
 
   return (

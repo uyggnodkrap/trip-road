@@ -1,5 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Trip } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
@@ -7,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { LogoutButton } from '@/components/logout-button'
 import { cn } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
+import { useRequireAuth } from '@/hooks/use-require-auth'
 
 function formatDateRange(start: string, end: string) {
   const s = new Date(start)
@@ -15,17 +18,24 @@ function formatDateRange(start: string, end: string) {
   return `${s.toLocaleDateString('ko-KR')} ~ ${e.toLocaleDateString('ko-KR')} (${diff}일)`
 }
 
-export default async function HomePage() {
-  const supabase = await createClient()
+export default function HomePage() {
+  const { user, loading } = useRequireAuth()
+  const [trips, setTrips] = useState<Trip[]>([])
 
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  useEffect(() => {
+    if (!user) return
+    const supabase = createClient()
+    supabase
+      .from('trips')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('start_date', { ascending: false })
+      .then(({ data }) => setTrips((data as Trip[]) ?? []))
+  }, [user])
 
-  const { data: trips } = await supabase
-    .from('trips')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('start_date', { ascending: false })
+  if (loading || !user) {
+    return <div className="min-h-screen flex items-center justify-center text-gray-400">로딩 중...</div>
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -42,10 +52,10 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {trips && trips.length > 0 ? (
+        {trips.length > 0 ? (
           <div className="space-y-3">
-            {(trips as Trip[]).map((trip) => (
-              <Link key={trip.id} href={`/trips/${trip.id}`}>
+            {trips.map((trip) => (
+              <Link key={trip.id} href={`/trip?id=${trip.id}`}>
                 <Card className="hover:shadow-md transition-shadow cursor-pointer">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-base">{trip.title}</CardTitle>

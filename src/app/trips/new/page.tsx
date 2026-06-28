@@ -47,7 +47,7 @@ export default function NewTripPage() {
       return
     }
 
-    router.push(`/trips/${data.id}`)
+    router.push(`/trip?id=${data.id}`)
   }
 
   return (

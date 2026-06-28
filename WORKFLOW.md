@@ -113,3 +113,15 @@
 **[프롬프트]** 여행 제목 변경할 수 있도록 해줘
 
 **[작업]** `EditableTripTitle` 컴포넌트 생성 — 헤더의 제목 클릭 시 인라인 input으로 전환, Enter/blur 시 Supabase 업데이트, Escape 시 원래 제목 복원. `/trips/[id]/page.tsx` 헤더에 적용
+
+---
+
+**[프롬프트]** https://github.com/uyggnodkrap/trip-road.git 에 커밋하고 푸시해줘
+
+**[작업]** remote 추가 후 전체 소스 커밋(`.env.local` 제외), main 브랜치 푸시 완료
+
+---
+
+**[프롬프트]** github page에 배포하고싶은데 방법 알려주고 GITHUP_PAGES.md 파일로 만들어줘
+
+**[작업]** `GITHUB_PAGES.md` 생성 — GitHub Pages는 SSR/미들웨어 미지원으로 직접 배포 불가함을 안내, Vercel 5분 배포 방법(환경변수 포함) 및 GitHub Pages로 전환 시 필요한 리팩터링 목록 정리

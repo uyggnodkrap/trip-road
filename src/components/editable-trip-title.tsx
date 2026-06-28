@@ -1,16 +1,15 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 interface Props {
   tripId: string
   initialTitle: string
+  onUpdate: (title: string) => void
 }
 
-export function EditableTripTitle({ tripId, initialTitle }: Props) {
-  const router = useRouter()
+export function EditableTripTitle({ tripId, initialTitle, onUpdate }: Props) {
   const [editing, setEditing] = useState(false)
   const [title, setTitle] = useState(initialTitle)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -28,7 +27,7 @@ export function EditableTripTitle({ tripId, initialTitle }: Props) {
     }
     const supabase = createClient()
     await supabase.from('trips').update({ title: trimmed }).eq('id', tripId)
-    router.refresh()
+    onUpdate(trimmed)
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
