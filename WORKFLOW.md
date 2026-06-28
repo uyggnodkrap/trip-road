@@ -125,3 +125,24 @@
 **[프롬프트]** github page에 배포하고싶은데 방법 알려주고 GITHUP_PAGES.md 파일로 만들어줘
 
 **[작업]** `GITHUB_PAGES.md` 생성 — GitHub Pages는 SSR/미들웨어 미지원으로 직접 배포 불가함을 안내, Vercel 5분 배포 방법(환경변수 포함) 및 GitHub Pages로 전환 시 필요한 리팩터링 목록 정리
+
+---
+
+**[프롬프트]** 아니 github pages로 배포해야해, 다른 사용자가 들어와야 하거든, 다른 클라우드 자원을 사용하기 어려운 상황이야
+
+**[프롬프트]** 배포된 앱 직접 들어가봐
+
+**[작업]** WebFetch로 배포 URL 확인 — 페이지 정상 로드, "로딩 중..." 은 클라이언트 인증 처리 중 정상 동작. 탭 제목 "Create Next App" 발견 → "여행 플래너"로 수정, lang="ko" 설정, 커밋 완료
+
+---
+
+**[작업]** 앱 전체를 GitHub Pages 호환 정적 SPA로 전환
+- `next.config.ts`: `output: 'export'`, `basePath: '/trip-road'` 추가
+- SSR 관련 파일 제거 (server.ts, middleware.ts, src/middleware.ts)
+- 모든 페이지를 클라이언트 컴포넌트로 전환, `useRequireAuth` 훅으로 인증 처리
+- `/trips/[id]` 동적 라우트 → `/trip?id=` 정적 페이지로 교체
+- `router.refresh()` → `onSuccess` 콜백 패턴으로 교체
+- `.github/workflows/deploy.yml` 추가 (push 시 자동 빌드·gh-pages 배포)
+- 빌드 통과 확인, 커밋·푸시 완료
+- GitHub Secrets 추가, Pages 설정 완료, 배포 성공 확인
+- 배포 URL: https://uyggnodkrap.github.io/trip-road/
