@@ -25,10 +25,10 @@ export default function HomePage() {
   useEffect(() => {
     if (!user) return
     const supabase = createClient()
+    // RLS가 본인 + 초대된 여행 모두 반환
     supabase
       .from('trips')
       .select('*')
-      .eq('user_id', user.id)
       .order('start_date', { ascending: false })
       .then(({ data }) => setTrips((data as Trip[]) ?? []))
   }, [user])
@@ -58,7 +58,12 @@ export default function HomePage() {
               <Link key={trip.id} href={`/trip?id=${trip.id}`}>
                 <Card className="hover:shadow-md transition-shadow cursor-pointer">
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-base">{trip.title}</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="text-base">{trip.title}</CardTitle>
+                      {trip.user_id !== user.id && (
+                        <Badge variant="outline" className="text-xs">공유됨</Badge>
+                      )}
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <Badge variant="secondary" className="text-xs font-normal">

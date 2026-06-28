@@ -14,7 +14,8 @@ export function useRequireAuth() {
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) {
-        router.push('/login')
+        const currentUrl = window.location.pathname + window.location.search
+        router.push(`/login?redirect=${encodeURIComponent(currentUrl)}`)
       } else {
         setUser(user)
       }
