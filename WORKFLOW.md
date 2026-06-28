@@ -130,6 +130,18 @@
 
 **[프롬프트]** 아니 github pages로 배포해야해, 다른 사용자가 들어와야 하거든, 다른 클라우드 자원을 사용하기 어려운 상황이야
 
+**[프롬프트]** 다른 사용자랑 같이 여행 플랜을 짜는 기능을 넣어줘
+
+**[작업]** 링크 기반 협업 + Supabase Realtime 동기화 구현
+- DB: `trips.share_token` 추가, `trip_members` 테이블, `join_trip_by_token` RPC, RLS 전면 업데이트
+- `ShareButton` 컴포넌트: 공유 링크 클립보드 복사
+- `trip/page.tsx`: 공유 토큰 처리(join 후 redirect), Realtime 구독, 오너 여부 분기(삭제 버튼)
+- `login/page.tsx`: `?redirect=` 파라미터로 로그인 후 원래 페이지 복귀
+- 홈: RLS 필터 제거로 공유된 여행도 표시, '공유됨' 뱃지
+- 빌드 통과, 커밋 완료 (Supabase 마이그레이션 + Realtime 활성화 필요)
+
+---
+
 **[프롬프트]** 배포된 앱 직접 들어가봐
 
 **[작업]** WebFetch로 배포 URL 확인 — 페이지 정상 로드, "로딩 중..." 은 클라이언트 인증 처리 중 정상 동작. 탭 제목 "Create Next App" 발견 → "여행 플래너"로 수정, lang="ko" 설정, 커밋 완료
